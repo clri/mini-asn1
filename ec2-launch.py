@@ -29,17 +29,26 @@ response = client.create_security_group(
     DryRun=False
 )
 security_grp = response['GroupId']
-#@TODO: set up security group with permissions to SSH access
 
-#@TODO: get ami image id, key (look up doc for this)
+response = ec2.authorize_security_group_ingress(
+        GroupId=security_grp,
+        IpPermissions=[
+            {'IpProtocol': 'tcp',
+             'FromPort': 22,
+             'ToPort': 22,
+             'IpRanges': [{'CidrIp': '0.0.0.0/0'}]}
+        ])
+
+#@TODO: get key pair name
+response = ec2.create_key_pair(KeyName='KEY_PAIR_NAME')
 '''
 Launch your ec2 instance. This requires ami image id and instance type.
 Refer to the AWS documentation for details. You need to setup your
 key-pair and security group before launching.
 '''
 conn.run_instances(
-        '<ami-image-id>',
-        key_name = '<your-key>',
+        '<ami-image-id>', #that depends on like, ubuntu64 etc
+        key_name = 'KEY_PAIR_NAME', #from ec2
         instance_type = 't2.micro',
         security_groups = [security_grp])
 
