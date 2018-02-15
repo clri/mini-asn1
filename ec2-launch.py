@@ -1,21 +1,13 @@
 import boto
 
-'''
-Create an access key programatically
-(referenced: http://boto3.readthedocs.io/en/latest/guide/iam-example-managing-access-keys.html
-https://boto3.readthedocs.io/en/latest/reference/services/iam.html#IAM.Client.create_access_key)
-'''
-iam = boto.client('iam')
-response = iam.create_access_key()
 
 '''
 Create a connection. Specify the region where you want to
 setup ec2 along with your security credentials
+boto automatically grabs credentials from my aws config file
 '''
 
-conn = boto.ec2.connect_to_region("us-west-2",
-		aws_access_key_id = response['AccessKey']['AccessKeyId'],
-		aws_secret_access_key = response['AccessKey']['SecretAccessKey'])
+conn = boto.ec2.connect_to_region("us-west-2")
 
 '''
 Create a security group.
@@ -35,8 +27,8 @@ response = ec2.authorize_security_group_ingress(
         IpPermissions=[
             {'IpProtocol': 'tcp',
              'FromPort': 22,
-             'ToPort': 22,
-             'IpRanges': [{'CidrIp': '0.0.0.0/0'}]}
+             'ToPort': 22
+             #'IpRanges': [{'CidrIp': '0.0.0.0/0'}]}
         ])
 
 #@TODO: get key pair name
@@ -46,12 +38,12 @@ Launch your ec2 instance. This requires ami image id and instance type.
 Refer to the AWS documentation for details. You need to setup your
 key-pair and security group before launching.
 '''
-conn.run_instances(
-        '<ami-image-id>', #that depends on like, ubuntu64 etc
+response = conn.run_instances(
+        'ami-11ca2d78', #generic linux
         key_name = 'KEY_PAIR_NAME', #from ec2
         instance_type = 't2.micro',
         security_groups = [security_grp])
-
+print response
 
 #@TODO: parse returned response (see below)
 '''
