@@ -1,7 +1,9 @@
-import boto
+import boto3
+import boto3.ec2
+import boto.ec2
 
-
-keyname = "MY_KEY_NAME" #set as global
+keyname = "MY_KEY_NAME3" #set as global
+sgn = 'minihw1g'
 
 '''
 Create a connection. Specify the region where you want to
@@ -9,36 +11,37 @@ setup ec2 along with your security credentials
 boto automatically grabs credentials from my aws config file
 '''
 
-conn = boto.ec2.connect_to_region("us-west-2")
+conn = boto.ec2.connect_to_region("us-east-1")
 
 '''
 Create a security group.
 https://boto3.readthedocs.io/en/latest/reference/services/ec2.html#EC2.Client.create_security_group
 '''
-client = boto.client('ec2')
+client = boto3.client('ec2')
 response = client.create_security_group(
     Description='minihw1',
-    GroupName='minihw1',
+    GroupName=sgn,
     #VpcId='string',
     DryRun=False
 )
 security_grp = response['GroupId']
 
-response = ec2.authorize_security_group_ingress(
+response = client.authorize_security_group_ingress(
         GroupId=security_grp,
         IpPermissions=[
             {'IpProtocol': 'tcp',
              'FromPort': 22,
              'ToPort': 22
-             #'IpRanges': [{'CidrIp': '0.0.0.0/0'}]}
+             #'IpRanges': [{'CidrIp': '0.0.0.0/0'}]
+			 }
         ])
 
 
 '''
 create ec2 key pair and store in a .pem file for SSH
 '''
-response = ec2.create_key_pair(KeyName=keyname)
-response.save("./keyname.pem")
+response = conn.create_key_pair(key_name=keyname)
+response.save("./")
 
 '''
 Launch your ec2 instance. This requires ami image id and instance type.
@@ -49,7 +52,7 @@ response = conn.run_instances(
         'ami-11ca2d78', #generic linux
         key_name = keyname, #from ec2
         instance_type = 't2.micro',
-        security_groups = [security_grp])
+        security_groups = [sgn])
 print response
 
 #@TODO: parse returned response (see below)
@@ -81,7 +84,7 @@ while (str != 'STOP' and str != 'STOP\n'):
 Stop instance
 '''
 
-conn.stop_instances(instance_ids=[iid'])
+conn.stop_instances(instance_ids=[iid])
 
 
 '''
