@@ -2,8 +2,8 @@ import boto3
 import boto3.ec2
 import boto.ec2
 
-keyname = "MY_KEY_NAME3" #set as global
-sgn = 'minihw1g'
+keyname = "MY_KEY_NAME14" #set as global
+sgn = 'minihw15'
 
 '''
 Create a connection. Specify the region where you want to
@@ -49,11 +49,11 @@ Refer to the AWS documentation for details. You need to setup your
 key-pair and security group before launching.
 '''
 response = conn.run_instances(
-        'ami-11ca2d78', #generic linux
+        'ami-7ea24a17', #centos
         key_name = keyname, #from ec2
         instance_type = 't2.micro',
         security_groups = [sgn])
-print response
+#print response
 
 #@TODO: parse returned response (see below)
 '''
@@ -62,9 +62,12 @@ You need to parse the returned response to print the following:
  - which region instance was created
  - instance ID
 '''
-iid = response['Instances'][0]['InstanceId']
-print "external IP address: " + response['Instances'][0]['PublicIpAddress']
-print "region: " + response['Instances'][0]['Placement']['AvailabilityZone']
+resp = response.instances[0]
+#print dir(resp)
+
+iid = resp.id
+print "external IP address: " + resp.ip_address
+print "region: " + resp.region
 print "instance ID: " + iid
 
 '''
