@@ -2,8 +2,8 @@ import boto3
 import boto3.ec2
 import boto.ec2
 
-keyname = "MY_KEY_NAME14" #set as global
-sgn = 'minihw15'
+keyname = "MY_KEY_NAME15" #set as global
+sgn = 'minihw1x'
 
 '''
 Create a connection. Specify the region where you want to
