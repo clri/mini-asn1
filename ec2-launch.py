@@ -1,9 +1,10 @@
 import boto3
 import boto3.ec2
 import boto.ec2
+from time import sleep
 
-keyname = "MY_KEY_NAME15" #set as global
-sgn = 'minihw1x'
+keyname = "MY_KEY_NAME193" #set as global
+sgn = 'minihw1s'
 
 '''
 Create a connection. Specify the region where you want to
@@ -63,24 +64,22 @@ You need to parse the returned response to print the following:
  - instance ID
 '''
 resp = response.instances[0]
-#print dir(resp)
+region = str(resp.region).split(':')[1]
+
+while resp.update() != "running":
+	sleep(5) #sleep until it runs
 
 iid = resp.id
 print "external IP address: " + resp.ip_address
-print "region: " + resp.region
+print "region: " + region
 print "instance ID: " + iid
 
 '''
-Do remember to use the correct key-pair and the security group with the
-correct access settings to make sure you can SSH into these instances.
-
-Validate that your instance was created successfully by SSHing into the instance.
-Screenshot
-
+wait for the user to SSH
 '''
 str = ''
 while (str != 'STOP' and str != 'STOP\n'):
-	str = raw_input('type STOP to stop')
+	str = raw_input('type STOP to stop ')
 
 
 '''
