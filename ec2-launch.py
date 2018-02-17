@@ -5,8 +5,8 @@ from time import sleep
 import paramiko
 from os import system
 
-keyname = "MYKEY5" #set as global
-sgn = 'mini_hw_5'
+keyname = "MYPEM" #set as global
+sgn = 'mini_hw_sg'
 
 '''
 Create a connection. Specify the region where you want to
@@ -43,6 +43,8 @@ create ec2 key pair and store in a .pem file for SSH
 '''
 response = conn.create_key_pair(key_name=keyname)
 response.save("./")
+pemfile = "./" + keyname + ".pem"
+system("chmod 400 " + pemfile)
 
 '''
 Launch your ec2 instance. This requires ami image id and instance type.
@@ -78,29 +80,30 @@ print "instance ID: " + iid
 ssh
 source: https://gist.github.com/mlafeldt/841944 https://gist.github.com/batok/2352501
 '''
-#wait for a bit at first
-sleep(20)
+#wait 3.3 minutes
+sleep(200)
+print 'SSH...'
 
 client = paramiko.SSHClient()
 client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-system("chmod 400 " + keyname + ".pem")
 
-client.connect(resp.ip_address, port=22, username="root", key_filename = "./" + keyname + ".pem")
+client.connect(resp.ip_address, port=22, username="root", key_filename=pemfile)
 
 stdin, stdout, stderr = client.exec_command("ls -al")
 print stdout.read()
 
 client.close()
 
-
+print 'stopping...'
 '''
 Stop instance
 '''
 
 conn.stop_instances(instance_ids=[iid])
 
-
+print 'terminating...'
 '''
 Terminate instance
 '''
 conn.terminate_instances(instance_ids=[iid])
+print 'terminated.'
