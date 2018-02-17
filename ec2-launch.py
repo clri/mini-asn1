@@ -3,8 +3,8 @@ import boto3.ec2
 import boto.ec2
 from time import sleep
 
-keyname = "MY_KEY_NAME193" #set as global
-sgn = 'minihw1s'
+keyname = "MY_KEY_aaa" #set as global
+sgn = 'minihw_1aaa'
 
 '''
 Create a connection. Specify the region where you want to
@@ -27,15 +27,13 @@ response = client.create_security_group(
 )
 security_grp = response['GroupId']
 
-response = client.authorize_security_group_ingress(
-        GroupId=security_grp,
-        IpPermissions=[
-            {'IpProtocol': 'tcp',
-             'FromPort': 22,
-             'ToPort': 22
-             #'IpRanges': [{'CidrIp': '0.0.0.0/0'}]
-			 }
-        ])
+response = conn.authorize_security_group(
+	group_id=security_grp,
+	ip_protocol='tcp',
+	from_port=22,
+	to_port=22,
+	cidr_ip='0.0.0.0/0'
+)
 
 
 '''
