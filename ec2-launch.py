@@ -3,8 +3,8 @@ import boto3.ec2
 import boto.ec2
 from time import sleep
 
-keyname = "MY_KEY_aaa" #set as global
-sgn = 'minihw_1aaa'
+keyname = "MY_KEY" #set as global
+sgn = 'minihw'
 
 '''
 Create a connection. Specify the region where you want to
