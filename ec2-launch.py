@@ -2,9 +2,11 @@ import boto3
 import boto3.ec2
 import boto.ec2
 from time import sleep
+import paramiko
+from os import system
 
-keyname = "MY_KEY" #set as global
-sgn = 'minihw'
+keyname = "MYKEY5" #set as global
+sgn = 'mini_hw_5'
 
 '''
 Create a connection. Specify the region where you want to
@@ -73,11 +75,22 @@ print "region: " + region
 print "instance ID: " + iid
 
 '''
-wait for the user to SSH
+ssh
+source: https://gist.github.com/mlafeldt/841944 https://gist.github.com/batok/2352501
 '''
-str = ''
-while (str != 'STOP' and str != 'STOP\n'):
-	str = raw_input('type STOP to stop ')
+#wait for a bit at first
+sleep(20)
+
+client = paramiko.SSHClient()
+client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+system("chmod 400 " + keyname + ".pem")
+
+client.connect(resp.ip_address, port=22, username="root", key_filename = "./" + keyname + ".pem")
+
+stdin, stdout, stderr = client.exec_command("ls -al")
+print stdout.read()
+
+client.close()
 
 
 '''
