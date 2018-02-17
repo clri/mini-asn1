@@ -5,8 +5,8 @@ from time import sleep
 import paramiko
 from os import system
 
-keyname = "MYPEM" #set as global
-sgn = 'mini_hw_sg'
+keyname = "MY_PEM" #set as global
+sgn = 'minihw_sg'
 
 '''
 Create a connection. Specify the region where you want to
@@ -80,8 +80,8 @@ print "instance ID: " + iid
 ssh
 source: https://gist.github.com/mlafeldt/841944 https://gist.github.com/batok/2352501
 '''
-#wait 3.3 minutes
-sleep(200)
+#wait 4 minutes
+sleep(240)
 print 'SSH...'
 
 client = paramiko.SSHClient()
